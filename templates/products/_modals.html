@@ -1,0 +1,115 @@
+<!-- Add Category -->
+<div class="modal-overlay {% if show_category_modal %}visible{% endif %}" id="categoryModalOverlay">
+  <div class="modal-card product-modal" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Add Category</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="categoryModalOverlay">&times;</button>
+    </div>
+    <form method="post" action="{% url 'category_add' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <div class="form-group">
+        <label class="form-label" for="id_name">Category Name</label>
+        <input class="form-control" type="text" name="name" id="id_name" required placeholder="Category name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="id_description">Description</label>
+        <textarea class="form-control" name="description" id="id_description" rows="3" placeholder="Description"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">Add Category</button>
+        <button type="button" class="btn btn-outline" data-close-modal="categoryModalOverlay">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add / Edit Product -->
+<div class="modal-overlay {% if show_product_modal %}visible{% endif %}" id="productModalOverlay">
+  <div class="modal-card product-modal product-modal-lg" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">{% if edit_product %}Edit Product{% else %}Add Product{% endif %}</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="productModalOverlay">&times;</button>
+    </div>
+    <form method="post" enctype="multipart/form-data"
+          action="{% if edit_product %}{% url 'product_edit' edit_product.pk %}{% else %}{% url 'product_add' %}{% endif %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+      <div class="modal-tabs" role="tablist">
+        <button type="button" class="modal-tab active" data-tab="details">Details</button>
+        <button type="button" class="modal-tab" data-tab="photos">Photos</button>
+      </div>
+
+      <div class="modal-tab-panel active" id="tab-details">
+        {% include "products/_product_form_fields.html" with form=product_form %}
+      </div>
+
+      <div class="modal-tab-panel" id="tab-photos">
+        <div class="form-group">
+          <label class="form-label" for="product_images">Product Images</label>
+          <input class="form-control" type="file" id="product_images" name="product_images" accept="image/*" multiple>
+          <span class="field-hint">You can select multiple images.</span>
+        </div>
+        {% if edit_product and edit_product.images.all %}
+        <div class="existing-images">
+          <p class="form-label">Existing images</p>
+          <div class="image-preview-grid">
+            {% for img in edit_product.images.all %}
+            <label class="image-preview-item">
+              <img src="{{ img.image.url }}" alt="Product image">
+              <span><input type="checkbox" name="remove_images" value="{{ img.pk }}"> Remove</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">{% if edit_product %}Update{% else %}Add{% endif %} Product</button>
+        <button type="button" class="btn btn-outline" data-close-modal="productModalOverlay">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Bulk -->
+<div class="modal-overlay {% if show_bulk_modal %}visible{% endif %}" id="bulkModalOverlay">
+  <div class="modal-card product-modal" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Add Bulk Product</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="bulkModalOverlay">&times;</button>
+    </div>
+    <p class="text-muted coming-soon-text">Coming Soon...</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close-modal="bulkModalOverlay">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Summary popups -->
+<div class="modal-overlay" id="summaryCountModal">
+  <div class="modal-card product-modal modal-sm" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Total Products</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="summaryCountModal">&times;</button>
+    </div>
+    <p class="summary-stat-value" id="summaryCountValue">{{ summary.total_count }}</p>
+    <p class="text-muted">Total product count (filtered results).</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="summaryAmountModal">
+  <div class="modal-card product-modal modal-sm" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Total Amount</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="summaryAmountModal">&times;</button>
+    </div>
+    <ul class="summary-amount-list">
+      <li><span>Total Buy Price</span><strong id="summaryBuyValue">{{ summary.total_buy }}</strong></li>
+      <li><span>Total MRP</span><strong id="summaryMrpValue">{{ summary.total_mrp }}</strong></li>
+    </ul>
+    <p class="text-muted">Based on current filters.</p>
+  </div>
+</div>

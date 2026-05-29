@@ -28,7 +28,7 @@
       {% csrf_token %}
       <div class="form-grid-2">
         <div class="form-group">
-          <label class="form-label required" for="personID">Person ID</label>
+          <label class="form-label" for="personID">Person ID</label>
           <input class="form-control {% if form_errors.personID %}is-invalid{% endif %}"
                  type="text" id="personID" name="personID"
                  value="{{ form_data.personID|default:'' }}"
@@ -39,7 +39,7 @@
           {% endif %}
         </div>
         <div class="form-group">
-          <label class="form-label required" for="role">Role</label>
+          <label class="form-label" for="role">Role</label>
           <select class="form-control" id="role" name="role" required>
             {% for value, label in role_choices %}
               <option value="{{ value }}" {% if form_data.role == value %}selected{% endif %}>{{ label }}</option>
@@ -52,7 +52,7 @@
                  value="{{ form_data.name|default:'' }}" placeholder="name">
         </div>
         <div class="form-group">
-          <label class="form-label required" for="password">Password</label>
+          <label class="form-label" for="password">Password</label>
           <input class="form-control {% if form_errors.password %}is-invalid{% endif %}"
                  type="password" id="password" name="password" required placeholder="password">
           {% if form_errors.password %}

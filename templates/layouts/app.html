@@ -17,15 +17,38 @@
     <nav class="sidebar-nav">
       {% for item in sidebar_nav %}
         {% if item.children %}
-          <div class="nav-group-title">{{ item.name }}</div>
-          {% for child in item.children %}
-            <a href="{% url child.url_name %}"
-               class="nav-link nav-sublink {% if request.resolver_match.url_name == child.url_name %}active{% endif %}"
-               title="{{ child.name }}">
-              {% include "includes/nav_icon.html" with icon=child.icon %}
-              <span class="nav-label">{{ child.name }}</span>
-            </a>
-          {% endfor %}
+          {% if item.collapsible %}
+            <div class="nav-group-title">{{ item.section }}</div>
+            <div class="nav-dropdown {% if item.open %}open{% endif %}" data-dropdown-id="{{ item.dropdown_id }}">
+              <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="{% if item.open %}true{% else %}false{% endif %}">
+                {% include "includes/nav_icon.html" with icon=item.icon %}
+                <span class="nav-label">{{ item.name }}</span>
+                <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="nav-dropdown-menu">
+                {% for child in item.children %}
+                  <a href="{% url child.url_name %}"
+                     class="nav-link nav-sublink {% if request.resolver_match.url_name == child.url_name %}active{% endif %}"
+                     title="{{ child.name }}">
+                    {% include "includes/nav_icon.html" with icon=child.icon %}
+                    <span class="nav-label">{{ child.name }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            <div class="nav-group-title">{{ item.name }}</div>
+            {% for child in item.children %}
+              <a href="{% url child.url_name %}"
+                 class="nav-link nav-sublink {% if request.resolver_match.url_name == child.url_name %}active{% endif %}"
+                 title="{{ child.name }}">
+                {% include "includes/nav_icon.html" with icon=child.icon %}
+                <span class="nav-label">{{ child.name }}</span>
+              </a>
+            {% endfor %}
+          {% endif %}
         {% else %}
           <a href="{% url item.url_name %}"
              class="nav-link {% if request.resolver_match.url_name == item.url_name %}active{% endif %}"
@@ -62,9 +85,14 @@
     </header>
     <main class="main-content">
       {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
+        <div class="flash-messages" role="status" aria-live="polite">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-flash" data-auto-dismiss="true">
+              <span class="alert-text">{{ message }}</span>
+              <button type="button" class="alert-close" aria-label="Dismiss">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
       {% block content %}{% endblock %}
     </main>

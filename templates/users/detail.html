@@ -23,7 +23,7 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label required" for="personID">Person ID</label>
+        <label class="form-label" for="personID">Person ID</label>
         <input class="form-control {% if form_errors.personID %}is-invalid{% endif %}"
                type="text" id="personID" name="personID"
                value="{{ profile_user.personID }}" required placeholder="person id">
@@ -32,7 +32,7 @@
         {% endif %}
       </div>
       <div class="form-group">
-        <label class="form-label required" for="role">Role</label>
+        <label class="form-label" for="role">Role</label>
         <select class="form-control" id="role" name="role" required>
           {% for value, label in role_choices %}
             <option value="{{ value }}" {% if profile_user.role == value %}selected{% endif %}>{{ label }}</option>

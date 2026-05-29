@@ -1,0 +1,69 @@
+<div class="form-grid-2">
+  <div class="form-group">
+    <label class="form-label" for="{{ form.product_id.id_for_label }}">Product ID</label>
+    <input type="text" name="product_id" id="{{ form.product_id.id_for_label }}"
+           class="form-control{% if form.product_id.errors %} is-invalid{% endif %}"
+           value="{{ form.product_id.value|default:'' }}" required placeholder="Product ID" autocomplete="off">
+    {% if form.product_id.errors %}<span class="field-error">{{ form.product_id.errors.0 }}</span>{% endif %}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.product_name.id_for_label }}">Product Name</label>
+    {{ form.product_name }}
+    {% if form.product_name.errors %}<span class="field-error">{{ form.product_name.errors.0 }}</span>{% endif %}
+  </div>
+</div>
+<div class="form-grid-2">
+  <div class="form-group">
+    <label class="form-label" for="{{ form.category.id_for_label }}">Product Category</label>
+    {{ form.category }}
+    {% if form.category.errors %}<span class="field-error">{{ form.category.errors.0 }}</span>{% endif %}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.hsn_code.id_for_label }}">HSN Code</label>
+    {{ form.hsn_code }}
+    {% if form.hsn_code.errors %}<span class="field-error">{{ form.hsn_code.errors.0 }}</span>{% endif %}
+  </div>
+</div>
+<div class="form-grid-3">
+  <div class="form-group">
+    <label class="form-label" for="{{ form.volume_unit.id_for_label }}">Volume Unit</label>
+    {{ form.volume_unit }}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.volume_size.id_for_label }}">Volume Size</label>
+    {{ form.volume_size }}
+    {% if form.volume_size.errors %}<span class="field-error">{{ form.volume_size.errors.0 }}</span>{% endif %}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.quantity.id_for_label }}">Quantity</label>
+    {{ form.quantity }}
+    {% if form.quantity.errors %}<span class="field-error">{{ form.quantity.errors.0 }}</span>{% endif %}
+  </div>
+</div>
+<div class="form-grid-3">
+  <div class="form-group">
+    <label class="form-label" for="{{ form.buy_price.id_for_label }}">Buy Price</label>
+    {{ form.buy_price }}
+    {% if form.buy_price.errors %}<span class="field-error">{{ form.buy_price.errors.0 }}</span>{% endif %}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.sell_price.id_for_label }}">Sell Price</label>
+    {{ form.sell_price }}
+    {% if form.sell_price.errors %}<span class="field-error">{{ form.sell_price.errors.0 }}</span>{% endif %}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="{{ form.mrp.id_for_label }}">MRP (optional)</label>
+    {{ form.mrp }}
+    {% if form.mrp.errors %}<span class="field-error">{{ form.mrp.errors.0 }}</span>{% endif %}
+  </div>
+</div>
+<div class="form-group">
+  <label class="form-label" for="{{ form.remark.id_for_label }}">Remark</label>
+  {{ form.remark }}
+</div>
+{% if form.is_active %}
+<div class="form-group form-check-row">
+  <label class="form-label" for="{{ form.is_active.id_for_label }}">Active</label>
+  {{ form.is_active }}
+</div>
+{% endif %}

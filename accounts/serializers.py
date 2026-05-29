@@ -150,8 +150,6 @@ class SelfProfileUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             "name",
-            "email",
-            "mobile_number",
             "alternative_contact_number",
             "address",
             "profile_picture",

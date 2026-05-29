@@ -1,0 +1,96 @@
+<div class="card product-table-card">
+  <div class="table-toolbar">
+    <form method="get" class="table-per-page-form">
+      {% if filters.q %}<input type="hidden" name="q" value="{{ filters.q }}">{% endif %}
+      {% if filters.category %}<input type="hidden" name="category" value="{{ filters.category }}">{% endif %}
+      {% if filters.buy_min %}<input type="hidden" name="buy_min" value="{{ filters.buy_min }}">{% endif %}
+      {% if filters.buy_max %}<input type="hidden" name="buy_max" value="{{ filters.buy_max }}">{% endif %}
+      {% if filters.sell_min %}<input type="hidden" name="sell_min" value="{{ filters.sell_min }}">{% endif %}
+      {% if filters.sell_max %}<input type="hidden" name="sell_max" value="{{ filters.sell_max }}">{% endif %}
+      <label class="per-page-label" for="per_page">Results</label>
+      <select class="form-control per-page-select" id="per_page" name="per_page" onchange="this.form.submit()">
+        {% for n in per_page_options %}
+          <option value="{{ n }}" {% if per_page == n %}selected{% endif %}>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+  <div class="table-wrap product-table-wrap">
+    <table class="data-table product-data-table">
+      <thead>
+        <tr>
+          <th class="text-left">Product ID</th>
+          <th>Date</th>
+          <th>HSN Code</th>
+          <th class="text-left">Product Name</th>
+          <th>Category</th>
+          <th>Qty</th>
+          <th>Buy Price</th>
+          <th>Sell Price</th>
+          <th>MRP</th>
+          <th class="text-left">Remark</th>
+          {% if is_stock_page %}
+          <th>Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in page_obj %}
+        <tr>
+          <td class="text-left">{{ product.product_id }}</td>
+          <td>{{ product.created_at|date:"d M Y" }}</td>
+          <td>{{ product.hsn_code }}</td>
+          <td class="text-left">{{ product.product_name }}</td>
+          <td>{{ product.category.name }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>{{ product.buy_price }}</td>
+          <td>{{ product.sell_price }}</td>
+          <td>{{ product.mrp|default:"—" }}</td>
+          <td class="text-left">{{ product.remark|default:"—"|truncatechars:40 }}</td>
+          {% if is_stock_page %}
+          <td class="product-actions-cell">
+            <a href="{% url 'product_stock' %}?{% if filter_qs %}{{ filter_qs }}&{% endif %}edit_product={{ product.pk }}">Edit</a>
+            {% if can_delete %}
+            <form method="post" action="{% url 'product_delete' product.pk %}" class="inline-delete-form"
+                  onsubmit="return confirm('Delete this product?');">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="btn-link-danger">Delete</button>
+            </form>
+            {% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="{% if is_stock_page %}11{% else %}10{% endif %}" class="text-left text-muted">No products available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <p class="text-muted table-record-count">
+      {% if record_total %}
+        Showing {{ record_start }}–{{ record_end }} of {{ record_total }} product{{ record_total|pluralize }}
+      {% else %}
+        Showing 0 to 0 of 0 products
+      {% endif %}
+    </p>
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination-nav" aria-label="Product pagination">
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline btn-sm" href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}{% if filters.q %}&q={{ filters.q }}{% endif %}{% if filters.category %}&category={{ filters.category }}{% endif %}{% if filters.buy_min %}&buy_min={{ filters.buy_min }}{% endif %}{% if filters.buy_max %}&buy_max={{ filters.buy_max }}{% endif %}{% if filters.sell_min %}&sell_min={{ filters.sell_min }}{% endif %}{% if filters.sell_max %}&sell_max={{ filters.sell_max }}{% endif %}">Previous</a>
+      {% else %}
+        <span class="btn btn-outline btn-sm disabled">Previous</span>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline btn-sm" href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}{% if filters.q %}&q={{ filters.q }}{% endif %}{% if filters.category %}&category={{ filters.category }}{% endif %}{% if filters.buy_min %}&buy_min={{ filters.buy_min }}{% endif %}{% if filters.buy_max %}&buy_max={{ filters.buy_max }}{% endif %}{% if filters.sell_min %}&sell_min={{ filters.sell_min }}{% endif %}{% if filters.sell_max %}&sell_max={{ filters.sell_max }}{% endif %}">Next</a>
+      {% else %}
+        <span class="btn btn-outline btn-sm disabled">Next</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</div>
