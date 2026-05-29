@@ -1,0 +1,83 @@
+{% extends "layouts/app.html" %}
+{% load user_tags %}
+
+{% block content %}
+<div class="card user-edit-card">
+  <h2 class="h2">Personal Settings</h2>
+  <p class="text-muted">Update your personal details. Person ID, role, and password cannot be changed here — contact your SuperAdmin for a password reset.</p>
+
+  {% if form_errors %}
+    <div class="alert alert-error">
+      {% for field, errs in form_errors.items %}
+        {% for e in errs %}<div>{{ field }}: {{ e }}</div>{% endfor %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="user-edit-form">
+    {% csrf_token %}
+
+    <div class="readonly-fields">
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Person ID</label>
+          <p class="readonly-value">{{ request.user.personID }}</p>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Role</label>
+          <p class="readonly-value">
+            <span class="badge badge-{{ request.user.role }}">{{ request.user.get_role_display }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input class="form-control" type="text" id="name" name="name"
+               value="{{ request.user.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-control" type="email" id="email" name="email"
+               value="{{ request.user.email|default:'' }}">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="mobile_number">Mobile Number</label>
+        <input class="form-control" type="tel" id="mobile_number" name="mobile_number"
+               value="{{ request.user.mobile_number|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="alternative_contact_number">Alternative Contact</label>
+        <input class="form-control" type="tel" id="alternative_contact_number" name="alternative_contact_number"
+               value="{{ request.user.alternative_contact_number|default:'' }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="address">Address</label>
+      <textarea class="form-control" id="address" name="address" rows="2">{{ request.user.address|default:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="profile_picture">Profile Picture</label>
+      <div class="profile-upload-row">
+        {% if request.user.profile_picture %}
+          <img src="{{ request.user.profile_picture.url }}" alt="Profile" class="profile-avatar-lg">
+        {% else %}
+          <span class="profile-avatar profile-avatar-lg profile-avatar-initials">{{ request.user|user_initials }}</span>
+        {% endif %}
+        <input class="form-control" type="file" id="profile_picture" name="profile_picture" accept="image/*">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

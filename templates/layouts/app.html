@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static user_tags %}
+
+{% block body %}
+<div class="app-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-text">FMCG POS</span>
+      <span class="brand-icon" aria-hidden="true">F</span>
+      <button type="button" class="sidebar-collapse-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="collapse-icon">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="sidebar-nav">
+      {% for item in sidebar_nav %}
+        {% if item.children %}
+          <div class="nav-group-title">{{ item.name }}</div>
+          {% for child in item.children %}
+            <a href="{% url child.url_name %}"
+               class="nav-link nav-sublink {% if request.resolver_match.url_name == child.url_name %}active{% endif %}"
+               title="{{ child.name }}">
+              {% include "includes/nav_icon.html" with icon=child.icon %}
+              <span class="nav-label">{{ child.name }}</span>
+            </a>
+          {% endfor %}
+        {% else %}
+          <a href="{% url item.url_name %}"
+             class="nav-link {% if request.resolver_match.url_name == item.url_name %}active{% endif %}"
+             title="{{ item.name }}">
+            {% include "includes/nav_icon.html" with icon=item.icon %}
+            <span class="nav-label">{{ item.name }}</span>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+  </aside>
+
+  <div class="main-wrapper" id="mainWrapper">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="btn-icon topbar-menu-btn" id="mobileSidebarToggle" aria-label="Open menu">☰</button>
+        <h2 class="topbar-title">{{ page_title|default:"Dashboard" }}</h2>
+      </div>
+      <div class="topbar-actions">
+        <div class="profile-menu" id="profileMenu">
+          <button type="button" class="profile-trigger" id="profileMenuToggle" aria-expanded="false" aria-haspopup="true">
+            {% if request.user.profile_picture %}
+              <img src="{{ request.user.profile_picture.url }}" alt="Profile" class="profile-avatar">
+            {% else %}
+              <span class="profile-avatar profile-avatar-initials">{{ request.user|user_initials }}</span>
+            {% endif %}
+          </button>
+          <div class="profile-dropdown" id="profileDropdown" role="menu">
+            <a href="{% url 'settings' %}" class="profile-dropdown-item" role="menuitem">Profile</a>
+            <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout" role="menuitem">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="main-content">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

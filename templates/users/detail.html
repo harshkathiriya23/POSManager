@@ -1,0 +1,125 @@
+{% extends "layouts/app.html" %}
+{% load user_tags %}
+
+{% block content %}
+<div class="card user-edit-card">
+  <div class="page-toolbar" style="margin-bottom:var(--spacing-md);">
+    <h2 class="h2" style="margin:0;">Edit User — {{ profile_user.personID }}</h2>
+    <span class="badge {% if profile_user.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+      {% if profile_user.is_active %}Active{% else %}Deactivated{% endif %}
+    </span>
+  </div>
+
+  {% if form_errors %}
+    <div class="alert alert-error">
+      {% for field, errs in form_errors.items %}
+        {% for e in errs %}<div>{{ field }}: {{ e }}</div>{% endfor %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="user-edit-form">
+    {% csrf_token %}
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label required" for="personID">Person ID</label>
+        <input class="form-control {% if form_errors.personID %}is-invalid{% endif %}"
+               type="text" id="personID" name="personID"
+               value="{{ profile_user.personID }}" required placeholder="person id">
+        {% if form_errors.personID %}
+          <span class="field-error">{{ form_errors.personID.0 }}</span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label required" for="role">Role</label>
+        <select class="form-control" id="role" name="role" required>
+          {% for value, label in role_choices %}
+            <option value="{{ value }}" {% if profile_user.role == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input class="form-control" type="text" id="name" name="name"
+               value="{{ profile_user.name|default:'' }}" placeholder="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-control" type="email" id="email" name="email"
+               value="{{ profile_user.email|default:'' }}" placeholder="email">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="mobile_number">Mobile Number</label>
+        <input class="form-control" type="tel" id="mobile_number" name="mobile_number"
+               value="{{ profile_user.mobile_number|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="alternative_contact_number">Alternative Contact</label>
+        <input class="form-control" type="tel" id="alternative_contact_number" name="alternative_contact_number"
+               value="{{ profile_user.alternative_contact_number|default:'' }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="address">Address</label>
+      <textarea class="form-control" id="address" name="address" rows="2">{{ profile_user.address|default:'' }}</textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="account_status">Account Status</label>
+        <select class="form-control" id="account_status" name="is_active"
+                {% if is_self %}disabled title="You cannot deactivate your own account"{% endif %}>
+          <option value="true" {% if profile_user.is_active %}selected{% endif %}>Active — can log in</option>
+          <option value="false" {% if not profile_user.is_active %}selected{% endif %}>Deactivated — cannot log in</option>
+        </select>
+        {% if is_self %}
+          <input type="hidden" name="is_active" value="true">
+          <span class="field-hint">You cannot deactivate your own account.</span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">New Password (optional)</label>
+        <input class="form-control {% if form_errors.password %}is-invalid{% endif %}"
+               type="password" id="password" name="password"
+               placeholder="Leave blank to keep current password" autocomplete="new-password">
+        {% if form_errors.password %}
+          <span class="field-error">{{ form_errors.password.0 }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="profile_picture">Profile Picture</label>
+      <div class="profile-upload-row">
+        {% if profile_user.profile_picture %}
+          <img src="{{ profile_user.profile_picture.url }}" alt="Profile" class="profile-avatar-lg">
+        {% else %}
+          <span class="profile-avatar profile-avatar-lg profile-avatar-initials">{{ profile_user|user_initials }}</span>
+        {% endif %}
+        <input class="form-control" type="file" id="profile_picture" name="profile_picture" accept="image/*">
+      </div>
+    </div>
+
+    <div class="meta-info text-muted">
+      <span>Profile: {% if profile_user.is_profile_completed %}Completed{% else %}Pending{% endif %}</span>
+      <span>Joined: {{ profile_user.date_joined|date:"M d, Y" }}</span>
+      {% if profile_user.last_login %}
+        <span>Last login: {{ profile_user.last_login|date:"M d, Y H:i" }}</span>
+      {% endif %}
+    </div>
+
+    <div class="modal-actions">
+      <button type="submit" class="btn btn-primary">Update User</button>
+      <a href="{% url 'user_list' %}" class="btn btn-outline">Back to List</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

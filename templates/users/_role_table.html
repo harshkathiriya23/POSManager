@@ -1,0 +1,38 @@
+<div class="card role-section">
+  <h3 class="h3 role-section-title">
+    {{ section_title }}
+    <span class="badge badge-{{ badge_class }}">{{ users|length }}</span>
+  </h3>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="text-left">Person ID</th>
+          <th class="text-left">Name</th>
+          <th>Profile</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td class="text-left">{{ u.personID }}</td>
+          <td class="text-left">{{ u.name|default:"—" }}</td>
+          <td>{% if u.is_profile_completed %}Complete{% else %}Pending{% endif %}</td>
+          <td>
+            {% if u.is_active %}
+              <span class="badge badge-active">Active</span>
+            {% else %}
+              <span class="badge badge-inactive">Inactive</span>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'user_detail' u.pk %}">Edit</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-left text-muted">No {{ section_title }} users yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

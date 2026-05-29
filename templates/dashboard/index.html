@@ -1,0 +1,26 @@
+{% extends "layouts/app.html" %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="card stat-card">
+    <p class="text-muted">Welcome</p>
+    <p class="stat-value">{{ request.user.name|default:request.user.personID }}</p>
+  </div>
+  <div class="card stat-card">
+    <p class="text-muted">Role</p>
+    <p class="stat-value" style="font-size:var(--font-size-lg);">{{ role_label }}</p>
+  </div>
+  <div class="card stat-card">
+    <p class="text-muted">Person ID</p>
+    <p class="stat-value" style="font-size:var(--font-size-lg);">{{ request.user.personID }}</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:var(--spacing-lg);">
+  <h2 class="h2">FMCG Business Management</h2>
+  <p class="text-muted">
+    Inventory, POS billing, bulk orders, and reports will be available in the next development phase.
+    The system architecture is ready for modular expansion.
+  </p>
+</div>
+{% endblock %}

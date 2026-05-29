@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login — FMCG POS{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+  <div class="card auth-card">
+    <h1 class="h1">FMCG POS</h1>
+    <p class="text-muted">Sign in with your Person ID</p>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-error">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label required" for="personID">Person ID</label>
+        <input class="form-control" type="text" id="personID" name="personID" required autofocus placeholder="person id">
+      </div>
+      <div class="form-group">
+        <label class="form-label required" for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password" required placeholder="password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px;">Sign In</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

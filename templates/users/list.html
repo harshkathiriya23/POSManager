@@ -1,0 +1,100 @@
+{% extends "layouts/app.html" %}
+
+{% block content %}
+<div class="page-toolbar">
+  <p class="text-muted">Manage login IDs for all application users</p>
+  <button type="button" class="btn btn-primary" id="openAddUserModal">Add New User</button>
+</div>
+
+{% include "users/_role_table.html" with section_title="SuperAdmin" users=superadmin_users badge_class="superadmin" %}
+{% include "users/_role_table.html" with section_title="Admin" users=admin_users badge_class="admin" %}
+{% include "users/_role_table.html" with section_title="SalesPerson" users=salesperson_users badge_class="salesperson" %}
+
+<div class="modal-overlay {% if show_add_modal %}visible{% endif %}" id="addUserModalOverlay">
+  <div class="modal-card" role="dialog" aria-labelledby="addUserModalTitle">
+    <div class="modal-header">
+      <h2 class="h2" id="addUserModalTitle">Add New User</h2>
+      <button type="button" class="btn-icon modal-close" id="closeAddUserModal" aria-label="Close">&times;</button>
+    </div>
+    <p class="text-muted">Create a login ID and assign a role. Person ID must be unique.</p>
+    {% if form_errors %}
+      <div class="alert alert-error">
+        {% for field, errs in form_errors.items %}
+          {% for e in errs %}<div>{{ field }}: {{ e }}</div>{% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <form method="post" action="{% url 'user_list' %}" id="addUserForm">
+      {% csrf_token %}
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label required" for="personID">Person ID</label>
+          <input class="form-control {% if form_errors.personID %}is-invalid{% endif %}"
+                 type="text" id="personID" name="personID"
+                 value="{{ form_data.personID|default:'' }}"
+                 required autocomplete="off"
+                 placeholder="e.g. SP001">
+          {% if form_errors.personID %}
+            <span class="field-error">{{ form_errors.personID.0 }}</span>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label required" for="role">Role</label>
+          <select class="form-control" id="role" name="role" required>
+            {% for value, label in role_choices %}
+              <option value="{{ value }}" {% if form_data.role == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="name">Name</label>
+          <input class="form-control" type="text" id="name" name="name"
+                 value="{{ form_data.name|default:'' }}" placeholder="name">
+        </div>
+        <div class="form-group">
+          <label class="form-label required" for="password">Password</label>
+          <input class="form-control {% if form_errors.password %}is-invalid{% endif %}"
+                 type="password" id="password" name="password" required placeholder="password">
+          {% if form_errors.password %}
+            <span class="field-error">{{ form_errors.password.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">Create User</button>
+        <button type="button" class="btn btn-outline" id="cancelAddUserModal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const overlay = document.getElementById("addUserModalOverlay");
+  const openBtn = document.getElementById("openAddUserModal");
+  const closeBtn = document.getElementById("closeAddUserModal");
+  const cancelBtn = document.getElementById("cancelAddUserModal");
+
+  function openModal() {
+    if (overlay) overlay.classList.add("visible");
+  }
+  function closeModal() {
+    if (overlay) overlay.classList.remove("visible");
+  }
+
+  if (openBtn) openBtn.addEventListener("click", openModal);
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+  if (overlay) {
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeModal();
+    });
+  }
+  {% if show_add_modal %}
+  openModal();
+  {% endif %}
+})();
+</script>
+{% endblock %}
