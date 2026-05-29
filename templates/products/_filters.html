@@ -1,0 +1,47 @@
+<form method="get" class="product-filters card">
+  <div class="filter-row-flex">
+    <div class="form-group filter-field-search">
+      <label class="form-label" for="q">Search</label>
+      <input class="form-control form-control-compact" type="search" id="q" name="q"
+             value="{{ filters.q|default:'' }}" placeholder="Name or HSN">
+    </div>
+
+    <div class="form-group filter-field-category">
+      <label class="form-label" for="category">Category</label>
+      <select class="form-control form-control-compact" id="category" name="category">
+        <option value="">All</option>
+        {% for cat in categories %}
+          <option value="{{ cat.pk }}" {% if filters.category == cat.pk|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="price-range-group">
+      <span class="price-range-label">Buy</span>
+      <div class="price-range-inputs">
+        <input class="form-control form-control-compact" type="number" step="0.01"
+               name="buy_min" id="buy_min" value="{{ filters.buy_min|default:'' }}" placeholder="Min" aria-label="Buy min">
+        <span class="range-sep">–</span>
+        <input class="form-control form-control-compact" type="number" step="0.01"
+               name="buy_max" id="buy_max" value="{{ filters.buy_max|default:'' }}" placeholder="Max" aria-label="Buy max">
+      </div>
+    </div>
+
+    <div class="price-range-group">
+      <span class="price-range-label">Sell</span>
+      <div class="price-range-inputs">
+        <input class="form-control form-control-compact" type="number" step="0.01"
+               name="sell_min" id="sell_min" value="{{ filters.sell_min|default:'' }}" placeholder="Min" aria-label="Sell min">
+        <span class="range-sep">–</span>
+        <input class="form-control form-control-compact" type="number" step="0.01"
+               name="sell_max" id="sell_max" value="{{ filters.sell_max|default:'' }}" placeholder="Max" aria-label="Sell max">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="filter-actions">
+    <button type="submit" class="btn btn-primary btn-sm">Apply Filters</button>
+    <a href="{% if is_stock_page %}{% url 'product_stock' %}{% else %}{% url 'product_list' %}{% endif %}" class="btn btn-outline btn-sm">Reset</a>
+  </div>
+</form>

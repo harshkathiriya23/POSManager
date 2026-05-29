@@ -4,7 +4,7 @@
 {% block content %}
 <div class="card user-edit-card">
   <h2 class="h2">Personal Settings</h2>
-  <p class="text-muted">Update your personal details. Person ID, role, and password cannot be changed here — contact your SuperAdmin for a password reset.</p>
+  <p class="text-muted">Update your personal details. Person ID, role, email, and password cannot be changed here — contact your SuperAdmin for a password reset.</p>
 
   {% if form_errors %}
     <div class="alert alert-error">
@@ -30,6 +30,16 @@
           </p>
         </div>
       </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0;margin-top:var(--spacing-lg);">
+          <label class="form-label">Email</label>
+          <p class="readonly-value">{{ request.user.email|default:"—" }}</p>
+        </div>
+        <div class="form-group" style="margin-bottom:0;margin-top:var(--spacing-lg);">
+          <label class="form-label">Mobile Number</label>
+          <p class="readonly-value">{{ request.user.mobile_number|default:"—" }}</p>
+        </div>
+      </div>
     </div>
 
     <div class="form-row">
@@ -39,25 +49,11 @@
                value="{{ request.user.name|default:'' }}">
       </div>
       <div class="form-group">
-        <label class="form-label" for="email">Email</label>
-        <input class="form-control" type="email" id="email" name="email"
-               value="{{ request.user.email|default:'' }}">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="mobile_number">Mobile Number</label>
-        <input class="form-control" type="tel" id="mobile_number" name="mobile_number"
-               value="{{ request.user.mobile_number|default:'' }}">
-      </div>
-      <div class="form-group">
         <label class="form-label" for="alternative_contact_number">Alternative Contact</label>
         <input class="form-control" type="tel" id="alternative_contact_number" name="alternative_contact_number"
-               value="{{ request.user.alternative_contact_number|default:'' }}">
+              value="{{ request.user.alternative_contact_number|default:'' }}">
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label" for="address">Address</label>
       <textarea class="form-control" id="address" name="address" rows="2">{{ request.user.address|default:'' }}</textarea>

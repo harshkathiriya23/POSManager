@@ -28,3 +28,7 @@ class RoleRequiredMixin(JWTLoginRequiredMixin):
 
 class SuperAdminRequiredMixin(RoleRequiredMixin):
     allowed_roles = ("superadmin",)
+
+
+class AdminOrSuperAdminRequiredMixin(RoleRequiredMixin):
+    allowed_roles = ("superadmin", "admin")

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from application.views import (
     CompleteProfileView,
@@ -19,4 +19,5 @@ urlpatterns = [
     path("settings/", SettingsView.as_view(), name="settings"),
     path("users/", UserListView.as_view(), name="user_list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="user_detail"),
+    path("products/", include("products.urls")),
 ]

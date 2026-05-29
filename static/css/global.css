@@ -110,7 +110,8 @@ h3,
 
 .sidebar.collapsed .nav-label,
 .sidebar.collapsed .brand-text,
-.sidebar.collapsed .nav-group-title {
+.sidebar.collapsed .nav-group-title,
+.sidebar.collapsed .nav-chevron {
   display: none;
 }
 
@@ -133,6 +134,14 @@ h3,
   justify-content: center;
   padding: 10px 0;
   margin: 2px var(--spacing-sm);
+}
+
+.sidebar.collapsed .nav-dropdown-menu {
+  display: none;
+}
+
+.sidebar.collapsed .nav-dropdown.open .nav-dropdown-menu {
+  display: block;
 }
 
 .sidebar.collapsed .nav-sublink {
@@ -218,6 +227,46 @@ h3,
   padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-xs);
   white-space: nowrap;
   overflow: hidden;
+}
+
+.nav-dropdown {
+  margin-bottom: 2px;
+}
+
+.nav-dropdown-toggle {
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  text-align: left;
+}
+
+.nav-chevron {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  opacity: 0.65;
+}
+
+.nav-dropdown.open .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  display: none;
+  overflow: hidden;
+  padding-left: 0;
+}
+
+.nav-dropdown.open .nav-dropdown-menu {
+  display: block;
+}
+
+.nav-dropdown .nav-sublink {
+  padding-left: 2.5rem;
 }
 
 .nav-icon {
@@ -339,8 +388,8 @@ h3,
   padding: var(--spacing-xl);
   max-width: 1400px;
   width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  /* background: var(--color-surface);
+  border: 1px solid var(--color-border); */
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
 }
@@ -372,7 +421,10 @@ h3,
   line-height: 1.3;
 }
 
-.form-label.required::after {
+.form-label.required::after,
+.form-label:has(+ input[required]:not([type="hidden"]))::after,
+.form-label:has(+ select[required])::after,
+.form-label:has(+ textarea[required])::after {
   content: " *";
   color: var(--color-error);
   font-weight: 600;
@@ -711,12 +763,57 @@ input[type="file"].form-control {
 }
 
 /* —— Alerts —— */
+.flash-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
 .alert {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-lg);
   border: 1px solid;
+  transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease,
+    margin 0.35s ease, padding 0.35s ease;
+}
+
+.alert-flash.alert-hiding {
+  opacity: 0;
+  transform: translateY(-4px);
+  max-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+  border-width: 0;
+  pointer-events: none;
+}
+
+.alert-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.alert-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0 0 0 4px;
+  cursor: pointer;
+  opacity: 0.55;
+  color: inherit;
+}
+
+.alert-close:hover {
+  opacity: 1;
 }
 
 .alert-error {

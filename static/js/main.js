@@ -39,6 +39,43 @@
     overlay.addEventListener("click", closeMobileSidebar);
   }
 
+  document.querySelectorAll(".nav-dropdown-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropdown = btn.closest(".nav-dropdown");
+      if (!dropdown) return;
+      const isOpen = dropdown.classList.toggle("open");
+      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      const id = dropdown.getAttribute("data-dropdown-id");
+      if (id) {
+        try {
+          localStorage.setItem("navDropdown_" + id, isOpen ? "1" : "0");
+        } catch (err) {}
+      }
+    });
+  });
+
+  document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
+    const id = dropdown.getAttribute("data-dropdown-id");
+    const btn = dropdown.querySelector(".nav-dropdown-toggle");
+    const hasActiveChild = dropdown.querySelector(".nav-sublink.active");
+    if (hasActiveChild) {
+      dropdown.classList.add("open");
+      if (btn) btn.setAttribute("aria-expanded", "true");
+      return;
+    }
+    if (id) {
+      try {
+        const stored = localStorage.getItem("navDropdown_" + id);
+        if (stored === "1") {
+          dropdown.classList.add("open");
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      } catch (err) {}
+    }
+  });
+
   const profileToggle = document.getElementById("profileMenuToggle");
   const profileDropdown = document.getElementById("profileDropdown");
   const profileMenu = document.getElementById("profileMenu");
@@ -92,6 +129,30 @@
   }
 
   initPasswordToggles();
+
+  function dismissAlert(alert) {
+    if (!alert || alert.classList.contains("alert-hiding")) return;
+    alert.classList.add("alert-hiding");
+    window.setTimeout(function () {
+      alert.remove();
+      const container = document.querySelector(".flash-messages");
+      if (container && !container.querySelector(".alert")) {
+        container.remove();
+      }
+    }, 400);
+  }
+
+  document.querySelectorAll(".alert-flash[data-auto-dismiss]").forEach(function (alert) {
+    const closeBtn = alert.querySelector(".alert-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        dismissAlert(alert);
+      });
+    }
+    window.setTimeout(function () {
+      dismissAlert(alert);
+    }, 4000);
+  });
 
   const addUserModal = document.getElementById("addUserModalOverlay");
   if (addUserModal) {

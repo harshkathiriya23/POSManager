@@ -1,0 +1,35 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-page">
+  <div class="product-toolbar">
+    <button type="button" class="btn btn-primary" id="openCategoryModal">Add Category</button>
+    <button type="button" class="btn btn-primary" id="openProductModal">Add Product</button>
+    <button type="button" class="btn btn-outline" id="openBulkModal">Add Bulk Product</button>
+  </div>
+
+  <hr class="section-divider">
+
+  {% include "products/_filters.html" %}
+
+  {% include "products/_table.html" %}
+
+  <hr class="section-divider">
+
+  <div class="product-summary-bar">
+    <button type="button" class="btn btn-outline" id="openSummaryCount">Total Products</button>
+    <button type="button" class="btn btn-outline" id="openSummaryAmount">Total Amount</button>
+  </div>
+</div>
+
+{% include "products/_modals.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/products.js' %}"></script>
+{% endblock %}

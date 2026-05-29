@@ -1,0 +1,52 @@
+{% extends "layouts/app.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="product-page">
+  <p class="text-muted product-page-desc">View and filter all products. Use Stock page to add or edit inventory.</p>
+
+  {% include "products/_filters.html" %}
+
+  {% include "products/_table.html" %}
+
+  <hr class="section-divider">
+
+  <div class="product-summary-bar">
+    <button type="button" class="btn btn-outline" id="openSummaryCount">Total Products</button>
+    <button type="button" class="btn btn-outline" id="openSummaryAmount">Total Amount</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="summaryCountModal">
+  <div class="modal-card product-modal modal-sm" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Total Products</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="summaryCountModal">&times;</button>
+    </div>
+    <p class="summary-stat-value">{{ summary.total_count }}</p>
+    <p class="text-muted">Total product count (filtered results).</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="summaryAmountModal">
+  <div class="modal-card product-modal modal-sm" role="dialog">
+    <div class="modal-header">
+      <h2 class="h2">Total Amount</h2>
+      <button type="button" class="btn-icon modal-close" data-close-modal="summaryAmountModal">&times;</button>
+    </div>
+    <ul class="summary-amount-list">
+      <li><span>Total Buy Price</span><strong>{{ summary.total_buy }}</strong></li>
+      <li><span>Total MRP</span><strong>{{ summary.total_mrp }}</strong></li>
+    </ul>
+    <p class="text-muted">Based on current filters.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/products.js' %}"></script>
+{% endblock %}
