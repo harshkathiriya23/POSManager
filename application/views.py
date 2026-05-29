@@ -35,7 +35,7 @@ class LoginView(View):
             if not candidate.is_active:
                 messages.error(
                     request,
-                    "This account is deactivated. Contact your SuperAdmin or use Django admin to activate it.",
+                    "This account is deactivated. Contact your SuperAdmin to activate it.",
                 )
                 return render(request, self.template_name)
             if not candidate.check_password(password):
