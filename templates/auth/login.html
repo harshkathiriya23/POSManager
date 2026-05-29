@@ -5,9 +5,23 @@
 
 {% block body %}
 <div class="auth-page">
+  <div class="auth-bg" aria-hidden="true">
+    <span class="shape circle"></span>
+    <span class="shape"></span>
+    <span class="shape circle"></span>
+    <span class="shape"></span>
+    <span class="shape"></span>
+    <span class="shape circle"></span>
+    <span class="shape"></span>
+    <span class="shape circle"></span>
+  </div>
+
   <div class="card auth-card">
-    <h1 class="h1">FMCG POS</h1>
-    <p class="text-muted">Sign in with your Person ID</p>
+    <div class="auth-logo">
+      <div class="auth-logo-mark">FMCG</div>
+      <h1 class="h1" style="margin-bottom:4px;color:#000;">FMCG POS</h1>
+      <p class="auth-subtitle">Log in to your account to continue.</p>
+    </div>
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-error">{{ message }}</div>

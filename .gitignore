@@ -169,3 +169,5 @@ backend/output_gcodes.zip
 backend/media/
 backend/umaboy/media/upload_textures/*
 **/CACHE/
+
+staticfiles/
